@@ -1,14 +1,8 @@
 import { useState, useEffect } from "react";
 import Seo from "../components/Seo";
 
-export default function Home() {
-  const [movies, setMovies] = useState();
-  useEffect(() => {
-    (async () => {
-      const { results } = await (await fetch("/api/movies")).json();
-      setMovies(results);
-    })();
-  }, []);
+export default function Home({ results }) {
+  const [movies, setMovies] = useState(results);
   return (
     <div className='container'>
       <Seo title='Home' />
@@ -42,4 +36,16 @@ export default function Home() {
       `}</style>
     </div>
   );
+}
+
+export async function getServerSideProps() {
+  const { results } = await (
+    await fetch("http://localhost:3000/api/movies")
+  ).json();
+
+  return {
+    props: {
+      results,
+    },
+  };
 }
